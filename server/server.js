@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const User = require('./models/User');
 
 dotenv.config();
 
@@ -26,7 +27,19 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', (req, res) => {
-  console.log('BODY', req.body);
+  let user = new User();
+
+  user.name = req.body.name;
+  user.email = req.body.email;
+  user.password = req.body.password;
+
+  user.save((err) => {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json('User succesfully saved!');
+    }
+  });
 });
 
 app.listen(PORT, (err) => {
