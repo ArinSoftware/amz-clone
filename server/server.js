@@ -2,9 +2,19 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const fileUpload = require('express-fileupload');
+const cloudinary = require('cloudinary').v2;
 const User = require('./models/User');
+const productRoutes = require('./routes/product');
 
 dotenv.config();
+
+//cloudinary config settings
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
 
 const app = express();
 const PORT = process.env.PORT;
@@ -21,26 +31,10 @@ mongoose.connect(process.env.DB_URI, (err) => {
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(fileUpload({ useTempFiles: true }));
 
-app.get('/', (req, res) => {
-  res.json('Hello Amazon Clone');
-});
-
-app.post('/', (req, res) => {
-  let user = new User();
-
-  user.name = req.body.name;
-  user.email = req.body.email;
-  user.password = req.body.password;
-
-  user.save((err) => {
-    if (err) {
-      res.json(err);
-    } else {
-      res.json('User succesfully saved!');
-    }
-  });
-});
+//require apis
+app.use('/api', productRoutes);
 
 app.listen(PORT, (err) => {
   if (err) {
