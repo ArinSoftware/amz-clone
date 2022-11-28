@@ -30,16 +30,46 @@ router.post('/products', async (req, res) => {
       message: 'Product succesfully saved',
     });
   } catch (error) {
-    res.status(500).jason({
+    res.status(500).json({
       status: false,
       message: error.message,
     });
   }
 });
 
-// Get all products GET
+// Get all products
+router.get('/products', async (req, res) => {
+  try {
+    let products = await Product.find();
+
+    res.json({
+      success: true,
+      products: products,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: error.message,
+    });
+  }
+});
 
 // Get a product GET
+router.get('/products/:id', async (req, res) => {
+  try {
+    let product = await Product.findOne({ _id: req.params.id });
+
+    res.json({
+      success: true,
+      product: product,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: error.message,
+    });
+  }
+});
 
 // Update a product PUT
 

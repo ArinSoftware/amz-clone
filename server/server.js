@@ -6,6 +6,8 @@ const fileUpload = require('express-fileupload');
 const cloudinary = require('cloudinary').v2;
 const User = require('./models/User');
 const productRoutes = require('./routes/product');
+const categoryRoutes = require('./routes/category');
+const ownerRoutes = require('./routes/owner');
 
 dotenv.config();
 
@@ -35,6 +37,8 @@ app.use(fileUpload({ useTempFiles: true }));
 
 //require apis
 app.use('/api', productRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api', ownerRoutes);
 
 app.listen(PORT, (err) => {
   if (err) {
